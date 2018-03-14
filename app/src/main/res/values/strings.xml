@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">track</string>
     <string name="title_activity_maps">Map</string>
+    <string name="no_address_found">Pin Point Address not Found</string>
+    <string name="address_found">address found</string>
+
 </resources>
