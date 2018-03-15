@@ -1,29 +1,20 @@
 package com.example.rohitsingh.track;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.provider.ContactsContract;
-import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.Service;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -142,24 +133,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
 
-            if (resultData == null) {
-                return;
-            }
 
             String mAddressOutput = resultData.getString(FetchAddressIntentService.Constants.RESULT_DATA_KEY);
             displayAddressOutput(mAddressOutput);
 
-            // Show a toast message if an address was found.
+            /* Show a toast message if an address was found.
             if (resultCode == FetchAddressIntentService.Constants.SUCCESS_RESULT) {
                 Toast.makeText(MapsActivity.this, R.string.address_found, Toast.LENGTH_SHORT).show();
             }
+            */
 
         }
     }
 
     private void displayAddressOutput(String mAddressOutput) {
 
-        address.setText(mAddressOutput);
+        address.setText(String.format("Address is %s", mAddressOutput));
 
     }
 
