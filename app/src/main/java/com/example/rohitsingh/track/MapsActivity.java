@@ -1,6 +1,8 @@
 package com.example.rohitsingh.track;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
@@ -22,17 +24,20 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback ,
-        GoogleApiClient.ConnectionCallbacks , GoogleApiClient.OnConnectionFailedListener {
+
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback  {
 
     private GoogleMap mMap;
     Button b_1;
-    TextView tv_1,address;
+    TextView tv_1;
     public double latitude;
     public double longitude;
+    TextView adrs ;
 
-    private AddressResultReceiver mResultReceiver;
 
 
 
@@ -72,13 +77,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
 
                 tv_1.setText("lat= "+latitude+"  lon= "+longitude);
-               marker[0] = mMap.addMarker(new MarkerOptions()
-                        .position(
-                                new LatLng(latitude,
-                                        longitude)).title("My Location")
+               marker[0] = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude,longitude)).title("My Location").draggable(true).visible(true));
 
-                        .draggable(true).visible(true));
-                startIntentService();
+                try {
+                    diplay_address(latitude,longitude);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
 
             }
         });
@@ -99,58 +105,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    protected void startIntentService() {
-        Intent intent = new Intent(this, FetchAddressIntentService.class);
+    private void diplay_address(double latitude, double longitude) throws IOException {
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            String address = addresses.get(0).getAddressLine(0);
+            String city = addresses.get(0).getLocality();
+            String state = addresses.get(0).getAdminArea();
+            adrs=(TextView) findViewById(R.id.address);
 
-        intent.putExtra(FetchAddressIntentService.Constants.RECEIVER,mResultReceiver);
+            adrs.setText(String.format("%s\n%s\n%s", address, city, state));
 
-        startService(intent);
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-
-    private class AddressResultReceiver extends ResultReceiver {
-
-        public AddressResultReceiver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-
-
-            String mAddressOutput = resultData.getString(FetchAddressIntentService.Constants.RESULT_DATA_KEY);
-            displayAddressOutput(mAddressOutput);
-
-            /* Show a toast message if an address was found.
-            if (resultCode == FetchAddressIntentService.Constants.SUCCESS_RESULT) {
-                Toast.makeText(MapsActivity.this, R.string.address_found, Toast.LENGTH_SHORT).show();
-            }
-            */
-
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private void displayAddressOutput(String mAddressOutput) {
-
-        address.setText(String.format("Address is %s", mAddressOutput));
-
-    }
 
 }
 
