@@ -5,6 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <EditText
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignBottom="@+id/search_img"
+        android:layout_alignParentStart="true"
+        android:background="@android:color/darker_gray"
+        android:textAlignment="viewStart" />
+
+
     <TextView
         android:id="@+id/address"
         android:layout_width="match_parent"
@@ -35,9 +45,18 @@
         android:id="@+id/tv_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/b_1"
+        android:layout_alignBottom="@+id/b_1"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/address"
         android:layout_marginStart="63dp"
         android:text="TextView" />
+
+    <ImageView
+        android:id="@+id/search_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/map"
+        android:layout_alignParentTop="true"
+        app:srcCompat="@android:drawable/ic_search_category_default" />
 
 </android.widget.RelativeLayout>
